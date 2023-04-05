@@ -1,0 +1,95 @@
+﻿<Window x:Class="ILDAViewer.net.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ILDAViewer.net;assembly=ILDAViewer.net"
+        xmlns:controls="clr-namespace:ILDAViewer.net.controls" 
+        xmlns:models="clr-namespace:ILDAViewer.net.models" xmlns:services="clr-namespace:ILDAViewer.net.services"
+        d:DataContext="{d:DesignInstance Type=models:FileCollectionModel}"
+        mc:Ignorable="d"
+        Title="ToCutViewer" Height="450" Width="600">
+    <Window.DataContext>
+        <models:FileCollectionModel x:Name="Model"/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <services:IldaFileConverter x:Key="FileConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open..." Command="{Binding OpenFileCommand}" />
+            </MenuItem>
+        </Menu>
+        <TabControl SelectedIndex="0"
+                    DockPanel.Dock="Top"
+                    ItemsSource="{Binding .}"
+                    SelectedItem="{Binding SelectedFile}">
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <controls:OpenTKFrame DataContext="{Binding ., Converter={StaticResource FileConverter}}"
+                                              Grid.Row="0"/>
+                        <DockPanel Grid.Row="1"
+                                   Margin="3">
+                            <TextBlock DockPanel.Dock="Left">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{} {0}:{1}">
+                                        <Binding ElementName="FrameSlider" Path="Value"/>
+                                        <Binding ElementName="FrameSlider" Path="Maximum"/>
+                                    </MultiBinding >
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <Slider x:Name="FrameSlider"
+                                    Minimum ="1"
+                                    Maximum="100"
+                                    Value="50"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    DockPanel.Dock="Left"/>
+                        </DockPanel>
+                        <ItemsControl ItemsSource="{Binding .}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Rows="1">
+                                        <controls:OpenTKFrame DataContext="{Binding .}"/>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{} {0}">
+                                    <Binding Path="Location"/>
+                                </MultiBinding >
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <Button Content="x"
+                                Command="{Binding ElementName=Model, Path=RemoveFileCommand}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+
+    </DockPanel>
+
+</Window>
