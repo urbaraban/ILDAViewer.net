@@ -15,6 +15,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <services:IldaFileConverter x:Key="FileConverter" />
+            <services:IndexConverter x:Key="IndexConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel LastChildFill="True">
@@ -29,14 +30,13 @@
                     SelectedItem="{Binding SelectedFile}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid  DataContext="{Binding ., Converter={StaticResource FileConverter}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3*"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <controls:OpenTKFrame DataContext="{Binding ., Converter={StaticResource FileConverter}}"
-                                              Grid.Row="0"/>
+                        <controls:OpenTKFrame Grid.Row="0"/>
                         <DockPanel Grid.Row="1"
                                    Margin="3">
                             <TextBlock DockPanel.Dock="Left">
@@ -48,9 +48,9 @@
                                 </TextBlock.Text>
                             </TextBlock>
                             <Slider x:Name="FrameSlider"
-                                    Minimum ="1"
-                                    Maximum="100"
-                                    Value="50"
+                                    Minimum ="0"
+                                    Maximum="{Binding Count, Converter={StaticResource IndexConverter}}"
+                                    Value="{Binding SelectedIndex}"
                                     TickFrequency="1"
                                     IsSnapToTickEnabled="True"
                                     DockPanel.Dock="Left"/>
@@ -64,7 +64,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <UniformGrid Rows="1">
-                                        <controls:OpenTKFrame DataContext="{Binding .}"/>
+                                        <controls:OpenTKFrame DataContext="{Binding ., Converter={StaticResource FileConverter}}"/>
                                     </UniformGrid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

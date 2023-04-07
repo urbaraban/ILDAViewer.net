@@ -30,7 +30,7 @@ namespace ILDAViewer.net.controls
             };
             OpenTkControl.Start(settings);
             GL.Enable(EnableCap.ProgramPointSize);
-            GL.PointSize(10.0f);
+            GL.PointSize(5.0f);
             OpenTkControl.SizeChanged += OpenTkControl_SizeChanged;
             // InsetControl.Start(settings);
         }
