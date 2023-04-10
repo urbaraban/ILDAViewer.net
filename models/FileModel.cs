@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using ILDA.net;
 using OpenTK.Graphics.OpenGL;
@@ -27,7 +28,7 @@ namespace ILDAViewer.net.models
             get => _selectedIndex;
             set
             {
-                _selectedIndex = value;
+                _selectedIndex = Math.Min(this.Count - 1, Math.Max(0, value));
                 OnPropertyChanged(nameof(SelectedIndex));
                 OnPropertyChanged(nameof(SelectedFrame));
             }
@@ -53,14 +54,13 @@ namespace ILDAViewer.net.models
         /// <param name="height"></param>
         public void Resize(double width, double height)
         {
-            this.size = new Size((int)width, (int)height);
-
+            int size = (int)Math.Min(width, height);
+            
+            GL.Viewport(0, 0, size, size);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            float halfWidth = 0.5f;
-            float halfHeight = 0.5f;
-            GL.Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, short.MaxValue, -short.MaxValue);
-            GL.Viewport(0, 0, (int)this.size.Width, (int)this.size.Height);
+            GL.Ortho(-1, 1, -1, 1, -1, 1);
+            GL.MatrixMode(MatrixMode.Modelview);
         }
 
         /// <summary>
@@ -139,22 +139,49 @@ namespace ILDAViewer.net.models
 
         public void DrawFrame(IldaFrame frame)
         {
-            GL.Viewport(0, 0, 500, 500);
+            GL.DeleteLists(this.displayList, 1);
+            this.displayList = GL.GenLists(1);
+            GL.NewList(this.displayList, ListMode.Compile);
 
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, 500, 0, 500, -1, 1);
+            GL.Begin(PrimitiveType.Lines);
+            GL.LineWidth(1);
 
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
+            for (int i = 1; i < frame.Count; i += 1)
+            {
+                IldaColor color0 = GetColor(frame[i - 1], frame.IldaVersion);
+                GL.Color3(color0.R, color0.G, color0.B);
+                Vector3 position0 = GetVector(frame[i - 1]);
+                GL.Vertex3(position0);
 
-            GL.ClearColor(Color.FromArgb(200, Color.DarkGray));
-            GL.Begin(PrimitiveType.Points);
-            GL.Vertex3(100.0f, 100.0f, 0.0f); // origin of the line
-            GL.Vertex3(200.0f, 140.0f, 5.0f); // ending point of the line
+                IldaColor color = GetColor(frame[i], frame.IldaVersion);
+                GL.Color3(color.R, color.G, color.B);
+                Vector3 position = GetVector(frame[i]);
+                GL.Vertex3(position);
+            }
+
+            GL.Ortho(-1, 1, -1, 1, -1, 1);
+
             GL.End();
+            GL.EndList();
 
-            GL.Flush();
+            GL.Enable(EnableCap.DepthTest);
+
+            GL.ClearColor(Color.FromArgb(200, Color.Black));
+            GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            //this.angle += 1f;
+            //GL.Rotate(this.angle, Vector3.UnitZ);
+            //GL.Rotate(this.angle, Vector3.UnitY);
+            //GL.Rotate(this.angle, Vector3.UnitX);
+            //GL.Translate(0.5f, 0, 0);
+
+            GL.CallList(this.displayList);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
         }
 
         public Vector3[] GetVectors(IldaFrame frame)
@@ -170,27 +197,36 @@ namespace ILDAViewer.net.models
         public Vector3 GetVector(IldaPoint point)
         {
             return new Vector3(
-                point.X / 32767.0f,
-                point.Y / 32767.0f,
-                point.Z / 32767.0f);
+                point.X / (float)short.MaxValue,
+                point.Y / (float)short.MaxValue,
+                point.Z / (float)short.MaxValue);
         }
 
         public IldaColor GetColor(IldaPoint ildaPoint, int v)
         {
-            if (ildaPoint.IsBlanked == false)
+            IldaColor? ildaColor = null;
+
+            if (ildaPoint.IsBlanked == false && this.File.Palette != null)
             {
-                if (v < 2 && this.File.Palette != null &&
-                    ildaPoint.PalIndex > 0 && ildaPoint.PalIndex < this.File.Palette.Count)
+                if (v < 2 && ildaPoint.PalIndex < this.File.Palette.Count)
                 {
-                    return this.File.Palette[ildaPoint.PalIndex];
+                    ildaColor = this.File.Palette[ildaPoint.PalIndex];
                 }
                 else if (ildaPoint.Color != null)
                 {
-                    return ildaPoint.Color;
+                    ildaColor = ildaPoint.Color;
                 }
+            } else
+            {
+                ildaColor = new IldaColor(50, 50, 50);
             }
 
-            return new IldaColor(50, 50, 50);
+            if (ildaColor == null)
+            {
+                ildaColor = new IldaColor(255, 255, 255);
+            }
+
+            return ildaColor;
         }
 
 

@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E40CCE5-492
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EB5F57D9-E986-424A-B0C0-B9C403B0073F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ILDA.net", "..\ILDA.net\src\ILDA.net\ILDA.net.csproj", "{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{0652174F-DDCC-4627-8F35-55289BC776AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0652174F-DDCC-4627-8F35-55289BC776AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0652174F-DDCC-4627-8F35-55289BC776AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0652174F-DDCC-4627-8F35-55289BC776AB} = {1E40CCE5-4920-4E66-A46A-7A1E7B58D3DF}
+		{314EAD8D-AF0B-43B5-9835-CB0E6C868EA8} = {1E40CCE5-4920-4E66-A46A-7A1E7B58D3DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EEB7607C-CCAD-4BFA-BFEC-7FBB12C1F604}

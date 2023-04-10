@@ -64,7 +64,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <UniformGrid Rows="1">
-                                        <controls:OpenTKFrame DataContext="{Binding ., Converter={StaticResource FileConverter}}"/>
+                                        <!-- <controls:OpenTKFrame DataContext="{Binding .}"/> -->
                                     </UniformGrid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

@@ -1,13 +1,9 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 using OpenTK.Wpf;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Media3D;
 using ILDAViewer.net.models;
 
 namespace ILDAViewer.net.controls
@@ -17,9 +13,6 @@ namespace ILDAViewer.net.controls
     /// </summary>
     public partial class OpenTKFrame : UserControl
     {
-        private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-        private TimeSpan _elapsedTime;
-
         public OpenTKFrame()
         {
             InitializeComponent();
@@ -56,6 +49,14 @@ namespace ILDAViewer.net.controls
                     frameModel.DrawFrame(frameModel.SelectedFrame);
                 }
                 
+            }
+        }
+
+        private void UserControl_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (this.DataContext is FileModel file)
+            {
+                file.SelectedIndex += (e.Delta / Math.Abs(e.Delta));
             }
         }
     }
