@@ -23,7 +23,6 @@ namespace ILDAViewer.net.controls
             };
             OpenTkControl.Start(settings);
             GL.Enable(EnableCap.ProgramPointSize);
-            GL.PointSize(5.0f);
             OpenTkControl.SizeChanged += OpenTkControl_SizeChanged;
             // InsetControl.Start(settings);
         }
@@ -40,15 +39,10 @@ namespace ILDAViewer.net.controls
         {
             if (this.DataContext is FileModel frameModel)
             {
-                if (frameModel.SelectedFrame == null)
-                {
-                    frameModel.Render(delta);
-                }
-                else
+                if (frameModel.SelectedFrame != null)
                 {
                     frameModel.DrawFrame(frameModel.SelectedFrame);
-                }
-                
+                }                
             }
         }
 

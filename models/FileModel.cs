@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using ILDA.net;
 using OpenTK.Graphics.OpenGL;
@@ -41,6 +40,8 @@ namespace ILDAViewer.net.models
 
         public bool IsReadOnly => ((ICollection<IldaFrame>)File).IsReadOnly;
 
+        private int displayList { get; set; }
+
         public FileModel(IldaFile file)
         {
             File = file;
@@ -63,80 +64,6 @@ namespace ILDAViewer.net.models
             GL.MatrixMode(MatrixMode.Modelview);
         }
 
-        /// <summary>
-        /// render a scene , same as OpenGLviaFramebuffer
-        /// it's better to make animation depending on the time, not the interval nor assuming frame rate
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public bool Render(TimeSpan time)
-        {
-            if (this.displayList <= 0)
-            {
-                this.displayList = GL.GenLists(1);
-                GL.NewList(this.displayList, ListMode.Compile);
-
-                GL.Begin(PrimitiveType.Points);
-
-                float factor = 0.2f;
-                Random rnd = new Random();
-                for (int i = 0; i < 100; i++)
-                {
-                    GL.Color3((byte)rnd.Next(0, 255), (byte)rnd.Next(0, 255), (byte)rnd.Next(0, 255));
-
-                    Vector3 position = new Vector3(
-                        rnd.Next(-1000, 1000) * factor,
-                        rnd.Next(-1000, 1000) * factor,
-                        rnd.Next(-1000, 1000) * factor);
-                    GL.Vertex3(position);
-
-                    position.Normalize();
-                    GL.Normal3(position);
-                }
-                GL.End();
-
-                GL.Begin(PrimitiveType.Lines);
-                Vector3 v1 = new Vector3(rnd.Next(-1000, 1000),
-                        rnd.Next(-1000, 1000) * factor,
-                        rnd.Next(-1000, 1000) * factor);
-                Vector3 v2 = new Vector3(rnd.Next(-1000, 1000),
-                        rnd.Next(-1000, 1000) * factor,
-                        rnd.Next(-1000, 1000) * factor);
-                GL.Vertex3(v1);
-                GL.Vertex3(v2);
-
-                GL.End();
-
-                GL.EndList();
-            }
-
-            //GL.Enable(EnableCap.Lighting);
-            //GL.Enable(EnableCap.Light0);
-            //GL.Enable(EnableCap.Blend);
-            //GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.DepthTest);
-
-            GL.ClearColor(Color.FromArgb(200, Color.DarkGray));
-            GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            float halfWidth = this.size.Width * 0.5f;
-            this.angle += 1f;
-            GL.Rotate(this.angle, Vector3.UnitZ);
-            GL.Rotate(this.angle, Vector3.UnitY);
-            GL.Rotate(this.angle, Vector3.UnitX);
-            GL.Translate(0.5f, 0, 0);
-
-            GL.CallList(this.displayList);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            return true; // continue animation
-        }
-
         public void DrawFrame(IldaFrame frame)
         {
             GL.DeleteLists(this.displayList, 1);
@@ -144,24 +71,31 @@ namespace ILDAViewer.net.models
             GL.NewList(this.displayList, ListMode.Compile);
 
             GL.Begin(PrimitiveType.Lines);
-            GL.LineWidth(1);
+            GL.LineWidth(Properties.Settings.Default.line_width);
 
             for (int i = 1; i < frame.Count; i += 1)
             {
-                IldaColor color0 = GetColor(frame[i - 1], frame.IldaVersion);
-                GL.Color3(color0.R, color0.G, color0.B);
-                Vector3 position0 = GetVector(frame[i - 1]);
-                GL.Vertex3(position0);
+                ildPointSet(frame[i - 1], frame.IldaVersion);
 
-                IldaColor color = GetColor(frame[i], frame.IldaVersion);
-                GL.Color3(color.R, color.G, color.B);
-                Vector3 position = GetVector(frame[i]);
-                GL.Vertex3(position);
+                ildPointSet(frame[i], frame.IldaVersion);
             }
+
+            GL.End();
+
+            if (Properties.Settings.Default.point_show == true)
+            {
+                GL.Begin(PrimitiveType.Points);
+                GL.PointSize(Properties.Settings.Default.point_size);
+                for (int i = 1; i < frame.Count; i += 1)
+                {
+                    ildPointSet(frame[i], frame.IldaVersion);
+                }
+                GL.End();
+            }
+
 
             GL.Ortho(-1, 1, -1, 1, -1, 1);
 
-            GL.End();
             GL.EndList();
 
             GL.Enable(EnableCap.DepthTest);
@@ -182,6 +116,14 @@ namespace ILDAViewer.net.models
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
+        }
+
+        private void ildPointSet(IldaPoint ildaPoint, int ildversion)
+        {
+            IldaColor color = GetColor(ildaPoint, ildversion);
+            GL.Color3(color.R, color.G, color.B);
+            Vector3 position = GetVector(ildaPoint);
+            GL.Vertex3(position);
         }
 
         public Vector3[] GetVectors(IldaFrame frame)
@@ -265,14 +207,5 @@ namespace ILDAViewer.net.models
         {
             return ((IEnumerable)File).GetEnumerator();
         }
-
-        #region Fields
-
-        private float angle;
-
-        private int displayList;
-
-        private Size size;
-        #endregion
     }
 }
