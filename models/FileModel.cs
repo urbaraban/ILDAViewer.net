@@ -34,7 +34,10 @@ namespace ILDAViewer.net.models
         }
         private int _selectedIndex = 0;
 
-        public IldaFile File { get; }
+        public string Location
+        {
+            get => File.Location;
+        }
 
         public int Count => ((ICollection<IldaFrame>)File).Count;
 
@@ -42,11 +45,18 @@ namespace ILDAViewer.net.models
 
         private int displayList { get; set; }
 
+        public FileModel()
+        {
+            this.File = new IldaFile();
+            this.SelectedIndex = 0;
+        }
         public FileModel(IldaFile file)
         {
             File = file;
             SelectedIndex = 0;
         }
+
+        private IldaFile File { get; }
 
         /// <summary>
         /// re-initialize size related staffs
@@ -85,7 +95,7 @@ namespace ILDAViewer.net.models
             if (Properties.Settings.Default.point_show == true)
             {
                 GL.Begin(PrimitiveType.Points);
-                GL.PointSize(Properties.Settings.Default.point_size);
+                GL.PointSize(Properties.Settings.Default.point_size / 10);
                 for (int i = 1; i < frame.Count; i += 1)
                 {
                     ildPointSet(frame[i], frame.IldaVersion);
@@ -105,12 +115,6 @@ namespace ILDAViewer.net.models
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-
-            //this.angle += 1f;
-            //GL.Rotate(this.angle, Vector3.UnitZ);
-            //GL.Rotate(this.angle, Vector3.UnitY);
-            //GL.Rotate(this.angle, Vector3.UnitX);
-            //GL.Translate(0.5f, 0, 0);
 
             GL.CallList(this.displayList);
 

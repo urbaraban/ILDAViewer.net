@@ -58,5 +58,17 @@ namespace ILDAViewer.net.Properties {
                 this["line_width"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool multiplier_show {
+            get {
+                return ((bool)(this["multiplier_show"]));
+            }
+            set {
+                this["multiplier_show"] = value;
+            }
+        }
     }
 }

@@ -6,13 +6,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ILDAViewer.net.models
 {
-    internal class FileCollectionModel : ObservableCollection<IldaFile>, INotifyPropertyChanged
+    internal class FileCollectionModel : ObservableCollection<FileModel>, INotifyPropertyChanged
     {
-        public IldaFile SelectedFile 
+        public FileModel SelectedFile 
         {
             get => _selectedfile;
             set
@@ -21,11 +22,32 @@ namespace ILDAViewer.net.models
                 NotifyPropertyChanged(nameof(SelectedFile));
             }
         }
-        private IldaFile _selectedfile;
+        private FileModel _selectedfile;
+
+        public bool PointDraw
+        {
+            get => Properties.Settings.Default.point_show;
+            set
+            {
+                Properties.Settings.Default.point_show = value;
+                Properties.Settings.Default.Save();
+                NotifyPropertyChanged(nameof(PointDraw));
+            }
+        }
+        public bool MultiplierDraw
+        {
+            get => Properties.Settings.Default.multiplier_show;
+            set
+            {
+                Properties.Settings.Default.multiplier_show = value;
+                Properties.Settings.Default.Save();
+                NotifyPropertyChanged(nameof(MultiplierDraw));
+            }
+        }
 
         public FileCollectionModel() 
         {
-            this.Add(new IldaFile());
+            this.Add(new FileModel(new IldaFile()));
         }
 
         public ICommand OpenFileCommand => new ActionCommand(() => {
@@ -48,8 +70,8 @@ namespace ILDAViewer.net.models
             {
                 if (IldaFile.Open(filepath) is IldaFile file)
                 {
-                    this.Add(file);
-                    if (this.SelectedFile.Location == "empty")
+                    this.Add(new FileModel(file));
+                    if (SelectedFile != null && this.SelectedFile.Location == "empty")
                     {
                         this.Remove(this.SelectedFile);
                     }
