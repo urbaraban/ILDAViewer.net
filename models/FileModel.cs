@@ -175,7 +175,14 @@ namespace ILDAViewer.net.models
             return ildaColor;
         }
 
-
+        internal IldaColor GetPalette(byte pindex)
+        {
+            if (this.File != null && pindex < this.File.Palette.Count)
+            {
+                return this.File.Palette[pindex];
+            }
+            return new IldaColor(255,255,255);
+        }
 
         public void Add(IldaFrame item)
         {

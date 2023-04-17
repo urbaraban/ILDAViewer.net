@@ -1,0 +1,52 @@
+﻿<Window x:Class="ILDAViewer.net.dialogs.FileInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:ILDAViewer.net.models"
+        xmlns:services="clr-namespace:ILDAViewer.net.services"
+        d:DataContext="{d:DesignInstance Type=models:FileModel}"
+        x:Name="main"
+        mc:Ignorable="d"
+        WindowStyle="ToolWindow"
+        Title="FileInfoDialog" Height="350" Width="400">
+    <Window.Resources>
+        <ResourceDictionary>
+            <services:VersionConverter x:Key="VersionConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Label ContentStringFormat="{}File: {0}"
+                   Content="{Binding Location}" 
+                   d:Content="Location"/>
+            <Label ContentStringFormat="{}Frames: {0}"
+                   Content="{Binding Count}" 
+                   d:Content="453"/>
+            <Label ContentStringFormat="{}Palette: {0}"
+                   Content="{Binding Palette.Count}" 
+                   d:Content="453"/>
+        </StackPanel>
+            <ListView Grid.Row="1" ItemsSource="{Binding .}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Version" Width="auto"
+                                            DisplayMemberBinding="{Binding IldaVersion, Converter={StaticResource VersionConverter}}"/>
+                    <GridViewColumn Header="Name" Width="auto"
+                                            DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Company" Width="auto"
+                                            DisplayMemberBinding="{Binding CompanyName}"/>
+                    <GridViewColumn Header="Points" Width="auto"
+                                            DisplayMemberBinding="{Binding Count}"/>
+                    <GridViewColumn Header="Scanner" Width="auto"
+                                            DisplayMemberBinding="{Binding ScannerNumber}"/>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

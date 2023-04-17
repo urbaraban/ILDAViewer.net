@@ -1,4 +1,5 @@
 ﻿using ILDA.net;
+using ILDAViewer.net.dialogs;
 using Microsoft.Win32;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -61,6 +62,14 @@ namespace ILDAViewer.net.models
 
         public ICommand RemoveFileCommand => new ActionCommand(() => {
             this.Remove(this.SelectedFile);
+        });
+
+        public ICommand ShowInfoCommand => new ActionCommand(() => {
+            FileInfoDialog fileInfoDialog = new FileInfoDialog()
+            {
+                DataContext = this.SelectedFile
+            };
+            fileInfoDialog.Show();
         });
 
         private void OpenFile(string filepath)

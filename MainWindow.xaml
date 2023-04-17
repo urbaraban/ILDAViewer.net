@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ILDAViewer.net;assembly=ILDAViewer.net"
         xmlns:controls="clr-namespace:ILDAViewer.net.controls" 
-        xmlns:models="clr-namespace:ILDAViewer.net.models" xmlns:services="clr-namespace:ILDAViewer.net.services"
+        xmlns:models="clr-namespace:ILDAViewer.net.models"
+        xmlns:services="clr-namespace:ILDAViewer.net.services"
         d:DataContext="{d:DesignInstance Type=models:FileCollectionModel}"
         mc:Ignorable="d"
+        x:Name="Main"
         Title="ToCutILDA" Height="450" Width="450">
     <Window.DataContext>
         <models:FileCollectionModel x:Name="Model"/>
@@ -16,6 +18,7 @@
         <ResourceDictionary>
             <services:IldaFileConverter x:Key="FileConverter" />
             <services:IndexConverter x:Key="IndexConverter" />
+            <services:PointColorConverter x:Key="ColorConverter" />
             <Style TargetType="Button">
                 <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
             </Style>
@@ -33,6 +36,10 @@
                 <MenuItem Header="Multipluer"
                           IsCheckable="True"
                           IsChecked="{Binding MultiplierDraw}" />
+            </MenuItem>
+            <MenuItem Header="Info">
+                <MenuItem Header="File info" Command="{Binding ShowInfoCommand}" />
+                <MenuItem Header="about" />
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Bottom">
@@ -69,23 +76,44 @@
                     IsSnapToTickEnabled="True"
                     DockPanel.Dock="Left"/>
         </DockPanel>
-        <DockPanel DockPanel.Dock="Right">
-            <ScrollViewer>
-                <ListView ItemsSource="{Binding SelectedFile.SelectedFrame}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding X}" />
-                                <Label Content="{Binding Y}" />
-                                <Label Content="{Binding Z}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
+        <DockPanel DockPanel.Dock="Right" DataContext="{Binding SelectedFile.SelectedFrame}">
+            <ListView Grid.Row="1" ItemsSource="{Binding .}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush>
+                                    <SolidColorBrush.Color>
+                                        <MultiBinding Converter="{StaticResource ColorConverter}">
+                                            <Binding ElementName="Model" Path="SelectedFile"/>
+                                            <Binding Path="IsBlanked" />
+                                            <Binding Path="PalIndex" />
+                                            <Binding Path="Color" />
+                                        </MultiBinding>
+                                    </SolidColorBrush.Color>
+                                </SolidColorBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="X" Width="auto"
+                                            DisplayMemberBinding="{Binding X}"/>
+                        <GridViewColumn Header="Y" Width="auto"
+                                            DisplayMemberBinding="{Binding Y}"/>
+                        <GridViewColumn Header="Z" Width="auto"
+                                            DisplayMemberBinding="{Binding Z}"/>
+                        <GridViewColumn Header="IsBlank" Width="auto"
+                                            DisplayMemberBinding="{Binding IsBlanked}"/>
+                        <GridViewColumn Header="PalIndex" Width="auto"
+                                            DisplayMemberBinding="{Binding PalIndex}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </DockPanel>
         <TabControl SelectedIndex="0"
-                    DockPanel.Dock="Top"
+                    DockPanel.Dock="Right"
                     ItemsSource="{Binding .}"
                     SelectedItem="{Binding SelectedFile}">
             <TabControl.ContentTemplate>
