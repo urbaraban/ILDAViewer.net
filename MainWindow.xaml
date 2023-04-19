@@ -120,7 +120,7 @@
             </ListView>
         </DockPanel>
         <DockPanel DockPanel.Dock="Right">
-            <ToggleButton Content="show"
+            <ToggleButton Content="&lt;"
                           IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
                           Width="10" Height="100"/>
         </DockPanel>

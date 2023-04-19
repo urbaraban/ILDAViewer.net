@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <StartupObject>ILDAViewer.net.App</StartupObject>
     <ApplicationIcon>logo.ico</ApplicationIcon>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>

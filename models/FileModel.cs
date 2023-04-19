@@ -113,11 +113,11 @@ namespace ILDAViewer.net.models
             {
                 GL.PointSize(Properties.Settings.Default.point_size);
                 GL.Begin(PrimitiveType.Points);
-                
+
                 for (int i = 1; i < frame.Count; i += 1)
                 {
                     if (frame[i].IsBlanked != true || Properties.Settings.Default.show_blanked == true)
-                    IldPointSet(frame[i], frame.IldaVersion);
+                        IldPointSet(frame[i], frame.IldaVersion);
                 }
                 GL.End();
             }
@@ -146,6 +146,7 @@ namespace ILDAViewer.net.models
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
+
         }
 
         private void IldPointSet(IldaPoint ildaPoint, int ildversion)
