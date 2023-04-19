@@ -11,7 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="logo.ico" />
+    <Content Include="logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
