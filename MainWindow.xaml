@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=models:FileCollectionModel}"
         mc:Ignorable="d"
         x:Name="Main"
-        Title="ToCutILDA" Height="450" Width="450">
+        Title="ToCutILDA" Height="650" Width="750">
     <Window.DataContext>
         <models:FileCollectionModel x:Name="Model"/>
     </Window.DataContext>
@@ -19,6 +19,7 @@
             <services:IldaFileConverter x:Key="FileConverter" />
             <services:IndexConverter x:Key="IndexConverter" />
             <services:PointColorConverter x:Key="ColorConverter" />
+            <services:BoolCollapsedConverter x:Key="VisibleCollapse" />
             <Style TargetType="Button">
                 <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
             </Style>
@@ -36,6 +37,9 @@
                 <MenuItem Header="Multipluer"
                           IsCheckable="True"
                           IsChecked="{Binding MultiplierDraw}" />
+                <MenuItem Header="Show blanked"
+                          IsCheckable="True"
+                          IsChecked="{Binding ShowBlanked}" />
             </MenuItem>
             <MenuItem Header="Info">
                 <MenuItem Header="File info" Command="{Binding ShowInfoCommand}" />
@@ -76,8 +80,11 @@
                     IsSnapToTickEnabled="True"
                     DockPanel.Dock="Left"/>
         </DockPanel>
-        <DockPanel DockPanel.Dock="Right" DataContext="{Binding SelectedFile.SelectedFrame}">
-            <ListView Grid.Row="1" ItemsSource="{Binding .}">
+        <DockPanel DockPanel.Dock="Right" DataContext="{Binding SelectedFile}">
+            <ListView Grid.Row="1" 
+                      x:Name="PointsListView"
+                      ItemsSource="{Binding SelectedFrame}"
+                      SelectedItem="{Binding SelectedPoint}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Setter Property="Background">
@@ -111,6 +118,11 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Right">
+            <ToggleButton Content="show"
+                          IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
+                          Width="10" Height="100"/>
         </DockPanel>
         <TabControl SelectedIndex="0"
                     DockPanel.Dock="Right"

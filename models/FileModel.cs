@@ -22,11 +22,23 @@ namespace ILDAViewer.net.models
             }
         }
 
+        public IldaPoint? SelectedPoint
+        {
+            get => _selectedpoint;
+            set
+            {
+                _selectedpoint = value;
+                OnPropertyChanged(nameof(SelectedPoint));
+            }
+        }
+        private IldaPoint? _selectedpoint;
+
         public int SelectedIndex
         {
             get => _selectedIndex;
             set
             {
+                this.SelectedPoint = null;
                 _selectedIndex = Math.Min(this.Count - 1, Math.Max(0, value));
                 OnPropertyChanged(nameof(SelectedIndex));
                 OnPropertyChanged(nameof(SelectedFrame));
@@ -85,21 +97,35 @@ namespace ILDAViewer.net.models
 
             for (int i = 1; i < frame.Count; i += 1)
             {
-                ildPointSet(frame[i - 1], frame.IldaVersion);
-
-                ildPointSet(frame[i], frame.IldaVersion);
+                IldaPoint p1 = frame[i - 1];
+                IldaPoint p2 = frame[i];
+                if ((p1.IsBlanked != true && p2.IsBlanked != true)
+                    || Properties.Settings.Default.show_blanked == true)
+                {
+                    IldPointSet(p1, frame.IldaVersion);
+                    IldPointSet(p2, frame.IldaVersion);
+                }
             }
 
             GL.End();
 
             if (Properties.Settings.Default.point_show == true)
             {
+                GL.PointSize(Properties.Settings.Default.point_size);
                 GL.Begin(PrimitiveType.Points);
-                GL.PointSize(Properties.Settings.Default.point_size / 10);
+                
                 for (int i = 1; i < frame.Count; i += 1)
                 {
-                    ildPointSet(frame[i], frame.IldaVersion);
+                    if (frame[i].IsBlanked != true || Properties.Settings.Default.show_blanked == true)
+                    IldPointSet(frame[i], frame.IldaVersion);
                 }
+                GL.End();
+            }
+            if (this.SelectedPoint != null)
+            {
+                GL.PointSize(Properties.Settings.Default.point_size * 2);
+                GL.Begin(PrimitiveType.Points);
+                IldPointSet(this.SelectedPoint, frame.IldaVersion);
                 GL.End();
             }
 
@@ -122,8 +148,9 @@ namespace ILDAViewer.net.models
             GL.LoadIdentity();
         }
 
-        private void ildPointSet(IldaPoint ildaPoint, int ildversion)
+        private void IldPointSet(IldaPoint ildaPoint, int ildversion)
         {
+            GL.Disable(EnableCap.Lighting);
             IldaColor color = GetColor(ildaPoint, ildversion);
             GL.Color3(color.R, color.G, color.B);
             Vector3 position = GetVector(ildaPoint);

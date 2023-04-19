@@ -48,6 +48,28 @@ namespace ILDAViewer.net.services
         }
     }
 
+    internal class BoolCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility visibility)
+            {
+                return visibility == Visibility.Visible;
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool b && b == true)
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+
+        }
+    }
+
     internal class VersionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

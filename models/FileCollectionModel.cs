@@ -45,6 +45,16 @@ namespace ILDAViewer.net.models
                 NotifyPropertyChanged(nameof(MultiplierDraw));
             }
         }
+        public bool ShowBlanked
+        {
+            get => Properties.Settings.Default.show_blanked;
+            set
+            {
+                Properties.Settings.Default.show_blanked = value;
+                Properties.Settings.Default.Save();
+                NotifyPropertyChanged(nameof(ShowBlanked));
+            }
+        }
 
         public FileCollectionModel() 
         {

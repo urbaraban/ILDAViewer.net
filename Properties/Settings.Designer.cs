@@ -70,5 +70,17 @@ namespace ILDAViewer.net.Properties {
                 this["multiplier_show"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool show_blanked {
+            get {
+                return ((bool)(this["show_blanked"]));
+            }
+            set {
+                this["show_blanked"] = value;
+            }
+        }
     }
 }
