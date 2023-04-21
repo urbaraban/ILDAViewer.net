@@ -18,6 +18,7 @@
         <ResourceDictionary>
             <services:IldaFileConverter x:Key="FileConverter" />
             <services:IndexConverter x:Key="IndexConverter" />
+            <services:IndexOfConverter x:Key="IndexOfConverter" />
             <services:PointColorConverter x:Key="PointColorConverter" />
             <services:BoolCollapsedConverter x:Key="VisibleCollapse" />
             <services:IldaColorConverter x:Key="ColorConverter" />
@@ -135,7 +136,14 @@
                       ItemsSource="{Binding Palette}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Index" Width="auto"/>
+                        <GridViewColumn Header="Index" Width="auto">
+                            <GridViewColumn.DisplayMemberBinding>
+                                <MultiBinding Converter="{StaticResource IndexOfConverter}">
+                                    <Binding ElementName="Model" Path="SelectedFile" />
+                                    <Binding Path="." />
+                                </MultiBinding>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
                         <GridViewColumn Header="Red" Width="auto"
                                         DisplayMemberBinding="{Binding R}"/>
                         <GridViewColumn Header="Green" Width="auto"
@@ -146,7 +154,11 @@
                 </ListView.View>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="Background" Value="{Binding ., Converter={StaticResource ColorConverter}}" />
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush Color="{Binding ., Converter={StaticResource ColorConverter}}" />
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>

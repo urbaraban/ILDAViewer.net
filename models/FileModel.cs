@@ -128,7 +128,7 @@ namespace ILDAViewer.net.models
             }
             if (this.SelectedPoint != null)
             {
-                GL.PointSize(Properties.Settings.Default.point_size * 2);
+                GL.PointSize(Properties.Settings.Default.point_size * 5);
                 GL.Begin(PrimitiveType.Points);
                 IldPointSet(this.SelectedPoint, frame.IldaVersion);
                 GL.End();

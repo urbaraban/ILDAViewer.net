@@ -5,6 +5,8 @@ using System.Windows;
 using ILDA.net;
 using ILDAViewer.net.models;
 using System.Windows.Media;
+using System.Collections;
+using System.Linq;
 
 namespace ILDAViewer.net.services
 {
@@ -151,6 +153,25 @@ namespace ILDAViewer.net.services
             }
 
             return Color.FromRgb(color.R, color.G, color.B);
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    internal class IndexOfConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is FileModel file && values[1] is IldaColor obj)
+            {
+                int index = -1;
+                index = file.Palette.IndexOf(obj);
+                return index.ToString();
+            }
+
+            return null;
         }
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
