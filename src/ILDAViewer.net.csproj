@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GLWpfControl\src\GLWpfControl\GLWpfControl.csproj" />
-    <ProjectReference Include="..\ILDA.net\src\ILDA.net\ILDA.net.csproj" />
+    <ProjectReference Include="..\..\GLWpfControl\src\GLWpfControl\GLWpfControl.csproj" />
+    <ProjectReference Include="..\..\ILDA.net\src\ILDA.net\ILDA.net.csproj" />
   </ItemGroup>
 
   <ItemGroup>
