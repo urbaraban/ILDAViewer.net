@@ -19,10 +19,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="OpenTK" Version="4.7.7" />
-    <PackageReference Include="OpenTK.GLWpfControl" Version="4.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GLWpfControl\src\GLWpfControl\GLWpfControl.csproj" />
     <ProjectReference Include="..\ILDA.net\src\ILDA.net\ILDA.net.csproj" />
   </ItemGroup>
 

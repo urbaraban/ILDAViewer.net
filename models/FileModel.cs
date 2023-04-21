@@ -22,6 +22,8 @@ namespace ILDAViewer.net.models
             }
         }
 
+        public IldaPalette Palette => this.File.Palette;
+
         public IldaPoint? SelectedPoint
         {
             get => _selectedpoint;
@@ -39,9 +41,12 @@ namespace ILDAViewer.net.models
             set
             {
                 this.SelectedPoint = null;
-                _selectedIndex = Math.Min(this.Count - 1, Math.Max(0, value));
-                OnPropertyChanged(nameof(SelectedIndex));
-                OnPropertyChanged(nameof(SelectedFrame));
+                if (this.Count > 0)
+                {
+                    _selectedIndex = (this.Count + value) % this.Count;
+                    OnPropertyChanged(nameof(SelectedIndex));
+                    OnPropertyChanged(nameof(SelectedFrame));
+                }
             }
         }
         private int _selectedIndex = 0;
@@ -50,10 +55,10 @@ namespace ILDAViewer.net.models
         {
             get => File.Location;
         }
-
         public int Count => ((ICollection<IldaFrame>)File).Count;
-
         public bool IsReadOnly => ((ICollection<IldaFrame>)File).IsReadOnly;
+
+        public double ZPosition { get; set; } = 0;
 
         private int displayList { get; set; }
 
@@ -128,11 +133,15 @@ namespace ILDAViewer.net.models
                 IldPointSet(this.SelectedPoint, frame.IldaVersion);
                 GL.End();
             }
-
-
-            GL.Ortho(-1, 1, -1, 1, -1, 1);
-
             GL.EndList();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(-1, 1, -1, 1, -1, 1);
+            GL.Translate(0, 0, ZPosition);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
 
             GL.Enable(EnableCap.DepthTest);
 

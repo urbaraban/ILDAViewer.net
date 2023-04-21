@@ -110,6 +110,23 @@ namespace ILDAViewer.net.services
         }
     }
 
+    internal class IldaColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is IldaColor color)
+            {
+                return Color.FromRgb(color.R, color.G, color.B);
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
     internal class PointColorConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

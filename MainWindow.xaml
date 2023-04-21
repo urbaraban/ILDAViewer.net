@@ -18,8 +18,9 @@
         <ResourceDictionary>
             <services:IldaFileConverter x:Key="FileConverter" />
             <services:IndexConverter x:Key="IndexConverter" />
-            <services:PointColorConverter x:Key="ColorConverter" />
+            <services:PointColorConverter x:Key="PointColorConverter" />
             <services:BoolCollapsedConverter x:Key="VisibleCollapse" />
+            <services:IldaColorConverter x:Key="ColorConverter" />
             <Style TargetType="Button">
                 <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
             </Style>
@@ -56,7 +57,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <UniformGrid Rows="1">
-                            <!-- <controls:OpenTKFrame DataContext="{Binding .}"/> -->
+                            <!-- <controls:MyTKFrame DataContext="{Binding .}"/> -->
                         </UniformGrid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -78,10 +79,11 @@
                     Value="{Binding SelectedFile.SelectedIndex}"
                     TickFrequency="1"
                     IsSnapToTickEnabled="True"
-                    DockPanel.Dock="Left"/>
+                    DockPanel.Dock="Left"
+                    PreviewMouseLeftButtonUp="FrameSlider_PreviewMouseLeftButtonUp" />
         </DockPanel>
         <DockPanel DockPanel.Dock="Right" DataContext="{Binding SelectedFile}">
-            <ListView Grid.Row="1" 
+            <ListView DockPanel.Dock="Right" 
                       x:Name="PointsListView"
                       ItemsSource="{Binding SelectedFrame}"
                       SelectedItem="{Binding SelectedPoint}">
@@ -91,7 +93,7 @@
                             <Setter.Value>
                                 <SolidColorBrush>
                                     <SolidColorBrush.Color>
-                                        <MultiBinding Converter="{StaticResource ColorConverter}">
+                                        <MultiBinding Converter="{StaticResource PointColorConverter}">
                                             <Binding ElementName="Model" Path="SelectedFile"/>
                                             <Binding Path="IsBlanked" />
                                             <Binding Path="PalIndex" />
@@ -118,10 +120,38 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            <ToggleButton DockPanel.Dock="Right"
+                          Content="&lt;"
+                          IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
+                          Width="10" Height="100"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Right">
+
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Left" LastChildFill="False"
+                   DataContext="{Binding SelectedFile}">
+            <ListView DockPanel.Dock="Left"
+                      x:Name="ColorListView"
+                      ItemsSource="{Binding Palette}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Index" Width="auto"/>
+                        <GridViewColumn Header="Red" Width="auto"
+                                        DisplayMemberBinding="{Binding R}"/>
+                        <GridViewColumn Header="Green" Width="auto"
+                                        DisplayMemberBinding="{Binding G}"/>
+                        <GridViewColumn Header="Blue" Width="auto"
+                                        DisplayMemberBinding="{Binding B}"/>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="{Binding ., Converter={StaticResource ColorConverter}}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
             <ToggleButton Content="&lt;"
-                          IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
+                          IsChecked="{Binding ElementName=ColorListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
                           Width="10" Height="100"/>
         </DockPanel>
         <TabControl SelectedIndex="0"
@@ -130,7 +160,7 @@
                     SelectedItem="{Binding SelectedFile}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <controls:OpenTKFrame Width="auto" Height="auto"/>
+                    <controls:MyTKFrame Width="auto" Height="auto"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
             <TabControl.ItemTemplate>

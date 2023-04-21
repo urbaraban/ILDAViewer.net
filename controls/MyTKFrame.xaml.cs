@@ -1,19 +1,19 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Wpf;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using ILDAViewer.net.models;
+using System.Windows.Input;
 
 namespace ILDAViewer.net.controls
 {
     /// <summary>
-    /// Логика взаимодействия для OpenTKFrame.xaml
+    /// Логика взаимодействия для MyTKFrame.xaml
     /// </summary>
-    public partial class OpenTKFrame : UserControl
+    public partial class MyTKFrame : UserControl
     {
-        public OpenTKFrame()
+        public MyTKFrame()
         {
             InitializeComponent();
             var settings = new GLWpfControlSettings
@@ -21,10 +21,9 @@ namespace ILDAViewer.net.controls
                 MajorVersion = 2,
                 MinorVersion = 1
             };
-            OpenTkControl.Start(settings);
+            MyTkControl.Start(settings);
             GL.Enable(EnableCap.ProgramPointSize);
-            OpenTkControl.SizeChanged += OpenTkControl_SizeChanged;
-            // InsetControl.Start(settings);
+            MyTkControl.SizeChanged += OpenTkControl_SizeChanged;
         }
 
         private void OpenTkControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -50,7 +49,16 @@ namespace ILDAViewer.net.controls
         {
             if (this.DataContext is FileModel file)
             {
-                file.SelectedIndex += (e.Delta / Math.Abs(e.Delta));
+                if (Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    double delta = (e.Delta / Math.Abs(e.Delta)) * 0.01d;
+                    file.ZPosition += delta;
+                } 
+                else
+                {
+                    file.SelectedIndex += (e.Delta / Math.Abs(e.Delta));
+                }
+
             }
         }
     }
