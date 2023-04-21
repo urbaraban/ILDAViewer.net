@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ILDAViewer.net.models;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,6 +24,17 @@ namespace ILDAViewer.net
                 if (prop != double.NaN)
                 {
                     slider.Value = slider.Minimum + Math.Round((slider.Maximum - slider.Minimum) * prop - 1);
+                }
+            }
+        }
+
+        private void TextBox_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (this.DataContext is FileCollectionModel filecollectionmodel)
+            {
+                if (filecollectionmodel.SelectedFile != null)
+                {
+                    filecollectionmodel.SelectedFile.FramePerSecond += (e.Delta / Math.Abs(e.Delta));
                 }
             }
         }

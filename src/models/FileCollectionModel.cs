@@ -19,6 +19,10 @@ namespace ILDAViewer.net.models
             get => _selectedfile;
             set
             {
+                if (_selectedfile != null)
+                {
+                    _selectedfile.Stop();
+                }
                 _selectedfile = value;
                 NotifyPropertyChanged(nameof(SelectedFile));
             }
@@ -60,6 +64,21 @@ namespace ILDAViewer.net.models
         {
             this.Add(new FileModel(new IldaFile()));
         }
+
+        public ICommand PlayCommand => new ActionCommand(async () => {
+            if (this.SelectedFile != null)
+            {
+                if (this.SelectedFile.Playing == true)
+                {
+                    await this.SelectedFile.Play();
+                }
+                else
+                {
+                    this.SelectedFile.Stop();
+                }
+            }
+        });
+
 
         public ICommand OpenFileCommand => new ActionCommand(() => {
             OpenFileDialog fileDialog = new OpenFileDialog();

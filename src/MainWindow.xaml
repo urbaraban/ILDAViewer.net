@@ -25,6 +25,9 @@
             <Style TargetType="Button">
                 <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
             </Style>
+            <Style TargetType="ToggleButton">
+                <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel LastChildFill="True">
@@ -63,9 +66,15 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </DockPanel>
+        </DockPanel> 
         <DockPanel DockPanel.Dock="Bottom"
                    Margin="3">
+            <TextBox Text="{Binding SelectedFile.FramePerSecond}" 
+                     d:Text="20" Width="30" 
+                     TextAlignment="Center"
+                     MouseWheel="TextBox_MouseWheel"/>
+            <ToggleButton Content="▶" IsChecked="{Binding Playing}"
+                          Command="{Binding PlayCommand}"/>
             <TextBlock DockPanel.Dock="Left">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{} {0}:{1}">
@@ -78,6 +87,7 @@
                     Minimum ="0"
                     Maximum="{Binding SelectedFile.Count}"
                     Value="{Binding SelectedFile.SelectedIndex}"
+                    Margin="3, 0"
                     TickFrequency="1"
                     IsSnapToTickEnabled="True"
                     DockPanel.Dock="Left"
@@ -125,9 +135,6 @@
                           Content="&lt;"
                           IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
                           Width="10" Height="100"/>
-        </DockPanel>
-        <DockPanel DockPanel.Dock="Right">
-
         </DockPanel>
         <DockPanel DockPanel.Dock="Left" LastChildFill="False"
                    DataContext="{Binding SelectedFile}">

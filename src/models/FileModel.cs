@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using ILDA.net;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -51,6 +53,28 @@ namespace ILDAViewer.net.models
         }
         private int _selectedIndex = 0;
 
+        public bool Playing
+        {
+            get => _playing;
+            set
+            {
+                _playing = value;
+                OnPropertyChanged(nameof(Playing));
+            }
+        }
+        private bool _playing;
+
+        public int FramePerSecond
+        {
+            get => _framepersecond;
+            set
+            {
+                _framepersecond = Math.Max(value, 0);
+                OnPropertyChanged(nameof(FramePerSecond));
+            }
+        }
+        private int _framepersecond = 20;
+
         public string Location
         {
             get => File.Location;
@@ -75,11 +99,6 @@ namespace ILDAViewer.net.models
 
         private IldaFile File { get; }
 
-        /// <summary>
-        /// re-initialize size related staffs
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
         public void Resize(double width, double height)
         {
             int size = (int)Math.Min(width, height);
@@ -89,6 +108,23 @@ namespace ILDAViewer.net.models
             GL.LoadIdentity();
             GL.Ortho(-1, 1, -1, 1, -1, 1);
             GL.MatrixMode(MatrixMode.Modelview);
+        }
+
+        public async Task Play()
+        {
+            await Task.Run(() =>
+            {
+                while (this.Playing == true)
+                {
+                    this.SelectedIndex += 1;
+                    Thread.Sleep(1000 / FramePerSecond);
+                }
+            });
+        }
+
+        public void Stop()
+        {
+            this.Playing = false;
         }
 
         public void DrawFrame(IldaFrame frame)
