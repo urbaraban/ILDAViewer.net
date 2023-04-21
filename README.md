@@ -2,4 +2,7 @@
 
 This is the ILDA (International Laser Display Association) viewer.
 
-OpenTK and ILDA.net were used
+This project used [OpenTK](https://github.com/opentk/opentk) and [ILDA.net](https://github.com/urbaraban/ILDA.net).
+
+
+<img src="misc/img/screen1.png" alt="screen" width="700" title="screen">
