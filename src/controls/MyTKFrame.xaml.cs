@@ -38,6 +38,9 @@ namespace ILDAViewer.net.controls
         {
             if (this.DataContext is FileModel frameModel)
             {
+                frameModel.Width = (float)this.ActualWidth;
+                frameModel.Height = (float)this.ActualHeight;
+
                 if (frameModel.SelectedFrame != null)
                 {
                     frameModel.DrawFrame(frameModel.SelectedFrame);
@@ -51,8 +54,8 @@ namespace ILDAViewer.net.controls
             {
                 if (Keyboard.Modifiers == ModifierKeys.Control)
                 {
-                    double delta = (e.Delta / Math.Abs(e.Delta)) * 0.01d;
-                    file.ZPosition += delta;
+                    float delta = (e.Delta / Math.Abs(e.Delta)) * 0.01f;
+                    file.Scale += delta;
                 } 
                 else
                 {

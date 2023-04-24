@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using ILDA.net;
+using ILDAViewer.net.services;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -75,14 +76,23 @@ namespace ILDAViewer.net.models
         }
         private int _framepersecond = 20;
 
+        public float Height { get; set; }
+        public float Width { get; set; }
+        private Vector2 ScreenProp()
+        {
+            float side = Math.Min(Width, Height);
+            return new Vector2(
+                Width / side,
+                Height / side);
+        }
+        public float Scale { get; set; } = 1.0f;
+
         public string Location
         {
             get => File.Location;
         }
         public int Count => ((ICollection<IldaFrame>)File).Count;
         public bool IsReadOnly => ((ICollection<IldaFrame>)File).IsReadOnly;
-
-        public double ZPosition { get; set; } = 0;
 
         private int displayList { get; set; }
 
@@ -150,6 +160,8 @@ namespace ILDAViewer.net.models
 
             GL.End();
 
+            //GLTools.DrawText(0, 0, "hello");
+
             if (Properties.Settings.Default.point_show == true)
             {
                 GL.PointSize(Properties.Settings.Default.point_size);
@@ -173,8 +185,10 @@ namespace ILDAViewer.net.models
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(-1, 1, -1, 1, -1, 1);
-            GL.Translate(0, 0, ZPosition);
+
+            Vector2 screen = this.ScreenProp();
+
+            GL.Ortho(-screen.X, screen.X, -screen.Y, screen.Y, -1, 1);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();

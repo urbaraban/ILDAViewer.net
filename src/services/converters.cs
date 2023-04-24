@@ -23,7 +23,7 @@ namespace ILDAViewer.net.services
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Visibility.Collapsed;
+            return Visibility.Hidden;
 
         }
     }

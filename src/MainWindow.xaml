@@ -179,7 +179,7 @@
                     SelectedItem="{Binding SelectedFile}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <controls:MyTKFrame Width="auto" Height="auto"/>
+                    <controls:MyTKFrame />
                 </DataTemplate>
             </TabControl.ContentTemplate>
             <TabControl.ItemTemplate>
