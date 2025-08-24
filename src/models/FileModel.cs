@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ILDA.net;
 using ILDAViewer.net.services;
+using Microsoft.Xaml.Behaviors.Core;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -107,7 +110,18 @@ namespace ILDAViewer.net.models
             SelectedIndex = 0;
         }
 
-        private IldaFile File { get; }
+        public ICommand RefreshFileCommand => new ActionCommand(() =>
+        {
+            if (IldaFile.Open(this.File.Location) is IldaFile file)
+            {
+                this.File = file;
+                this.SelectedIndex = 0;
+                OnPropertyChanged(nameof(SelectedFrame));
+                OnPropertyChanged(nameof(Palette));
+            }
+        });
+
+        private IldaFile File { get; set; }
 
         public void Resize(double width, double height)
         {

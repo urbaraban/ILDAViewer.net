@@ -1,18 +1,21 @@
-﻿<Window x:Class="ILDAViewer.net.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ILDAViewer.net;assembly=ILDAViewer.net"
-        xmlns:controls="clr-namespace:ILDAViewer.net.controls" 
-        xmlns:models="clr-namespace:ILDAViewer.net.models"
-        xmlns:services="clr-namespace:ILDAViewer.net.services"
-        d:DataContext="{d:DesignInstance Type=models:FileCollectionModel}"
-        mc:Ignorable="d"
-        x:Name="Main"
-        Title="ToCutILDA" Height="650" Width="750">
+﻿<Window
+    x:Class="ILDAViewer.net.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:ILDAViewer.net.controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ILDAViewer.net;assembly=ILDAViewer.net"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:ILDAViewer.net.models"
+    xmlns:services="clr-namespace:ILDAViewer.net.services"
+    x:Name="Main"
+    Title="ToCutILDA"
+    Width="750"
+    Height="650"
+    d:DataContext="{d:DesignInstance Type=models:FileCollectionModel}"
+    mc:Ignorable="d">
     <Window.DataContext>
-        <models:FileCollectionModel x:Name="Model"/>
+        <models:FileCollectionModel x:Name="Model" />
     </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
@@ -33,21 +36,24 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Open..." Command="{Binding OpenFileCommand}" />
+                <MenuItem Command="{Binding OpenFileCommand}" Header="Open..." />
             </MenuItem>
-            <MenuItem Header="Setting" >
-                <MenuItem Header="Points"
-                          IsCheckable="True"
-                          IsChecked="{Binding PointDraw}" />
-                <MenuItem Header="Multipluer"
-                          IsCheckable="True"
-                          IsChecked="{Binding MultiplierDraw}" />
-                <MenuItem Header="Show blanked"
-                          IsCheckable="True"
-                          IsChecked="{Binding ShowBlanked}" />
+            <MenuItem Header="Setting">
+                <MenuItem
+                    Header="Points"
+                    IsCheckable="True"
+                    IsChecked="{Binding PointDraw}" />
+                <MenuItem
+                    Header="Multipluer"
+                    IsCheckable="True"
+                    IsChecked="{Binding MultiplierDraw}" />
+                <MenuItem
+                    Header="Show blanked"
+                    IsCheckable="True"
+                    IsChecked="{Binding ShowBlanked}" />
             </MenuItem>
             <MenuItem Header="Info">
-                <MenuItem Header="File info" Command="{Binding ShowInfoCommand}" />
+                <MenuItem Command="{Binding ShowInfoCommand}" Header="File info" />
                 <MenuItem Header="about" />
             </MenuItem>
         </Menu>
@@ -55,7 +61,7 @@
             <ItemsControl ItemsSource="{Binding .}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -66,38 +72,43 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </DockPanel> 
-        <DockPanel DockPanel.Dock="Bottom"
-                   Margin="3">
-            <TextBox Text="{Binding SelectedFile.FramePerSecond}" 
-                     d:Text="20" Width="30" 
-                     TextAlignment="Center"
-                     MouseWheel="TextBox_MouseWheel"/>
-            <ToggleButton Content="▶" IsChecked="{Binding Playing}"
-                          Command="{Binding PlayCommand}"/>
+        </DockPanel>
+        <DockPanel Margin="3" DockPanel.Dock="Bottom">
+            <TextBox
+                Width="30"
+                d:Text="20"
+                MouseWheel="TextBox_MouseWheel"
+                Text="{Binding SelectedFile.FramePerSecond}"
+                TextAlignment="Center" />
+            <ToggleButton
+                Command="{Binding PlayCommand}"
+                Content="▶"
+                IsChecked="{Binding Playing}" />
             <TextBlock DockPanel.Dock="Left">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{} {0}:{1}">
-                        <Binding ElementName="FrameSlider" Path="Value"/>
-                        <Binding ElementName="FrameSlider" Path="Maximum"/>
-                    </MultiBinding >
+                        <Binding ElementName="FrameSlider" Path="Value" />
+                        <Binding ElementName="FrameSlider" Path="Maximum" />
+                    </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Slider x:Name="FrameSlider"
-                    Minimum ="0"
-                    Maximum="{Binding SelectedFile.Count}"
-                    Value="{Binding SelectedFile.SelectedIndex}"
-                    Margin="3, 0"
-                    TickFrequency="1"
-                    IsSnapToTickEnabled="True"
-                    DockPanel.Dock="Left"
-                    PreviewMouseLeftButtonUp="FrameSlider_PreviewMouseLeftButtonUp" />
+            <Slider
+                x:Name="FrameSlider"
+                Margin="3,0"
+                DockPanel.Dock="Left"
+                IsSnapToTickEnabled="True"
+                Maximum="{Binding SelectedFile.Count}"
+                Minimum="0"
+                PreviewMouseLeftButtonUp="FrameSlider_PreviewMouseLeftButtonUp"
+                TickFrequency="1"
+                Value="{Binding SelectedFile.SelectedIndex}" />
         </DockPanel>
-        <DockPanel DockPanel.Dock="Right" DataContext="{Binding SelectedFile}">
-            <ListView DockPanel.Dock="Right" 
-                      x:Name="PointsListView"
-                      ItemsSource="{Binding SelectedFrame}"
-                      SelectedItem="{Binding SelectedPoint}">
+        <DockPanel DataContext="{Binding SelectedFile}" DockPanel.Dock="Right">
+            <ListView
+                x:Name="PointsListView"
+                DockPanel.Dock="Right"
+                ItemsSource="{Binding SelectedFrame}"
+                SelectedItem="{Binding SelectedPoint}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Setter Property="Background">
@@ -105,7 +116,7 @@
                                 <SolidColorBrush>
                                     <SolidColorBrush.Color>
                                         <MultiBinding Converter="{StaticResource PointColorConverter}">
-                                            <Binding ElementName="Model" Path="SelectedFile"/>
+                                            <Binding ElementName="Model" Path="SelectedFile" />
                                             <Binding Path="IsBlanked" />
                                             <Binding Path="PalIndex" />
                                             <Binding Path="Color" />
@@ -118,32 +129,47 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="X" Width="auto"
-                                            DisplayMemberBinding="{Binding X}"/>
-                        <GridViewColumn Header="Y" Width="auto"
-                                            DisplayMemberBinding="{Binding Y}"/>
-                        <GridViewColumn Header="Z" Width="auto"
-                                            DisplayMemberBinding="{Binding Z}"/>
-                        <GridViewColumn Header="IsBlank" Width="auto"
-                                            DisplayMemberBinding="{Binding IsBlanked}"/>
-                        <GridViewColumn Header="PalIndex" Width="auto"
-                                            DisplayMemberBinding="{Binding PalIndex}"/>
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding X}"
+                            Header="X" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Y}"
+                            Header="Y" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Z}"
+                            Header="Z" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding IsBlanked}"
+                            Header="IsBlank" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding PalIndex}"
+                            Header="PalIndex" />
                     </GridView>
                 </ListView.View>
             </ListView>
-            <ToggleButton DockPanel.Dock="Right"
-                          Content="&lt;"
-                          IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
-                          Width="10" Height="100"/>
+            <ToggleButton
+                Width="10"
+                Height="100"
+                Content="&lt;"
+                DockPanel.Dock="Right"
+                IsChecked="{Binding ElementName=PointsListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}" />
         </DockPanel>
-        <DockPanel DockPanel.Dock="Left" LastChildFill="False"
-                   DataContext="{Binding SelectedFile}">
-            <ListView DockPanel.Dock="Left"
-                      x:Name="ColorListView"
-                      ItemsSource="{Binding Palette}">
+        <DockPanel
+            DataContext="{Binding SelectedFile}"
+            DockPanel.Dock="Left"
+            LastChildFill="False">
+            <ListView
+                x:Name="ColorListView"
+                DockPanel.Dock="Left"
+                ItemsSource="{Binding Palette}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Index" Width="auto">
+                        <GridViewColumn Width="auto" Header="Index">
                             <GridViewColumn.DisplayMemberBinding>
                                 <MultiBinding Converter="{StaticResource IndexOfConverter}">
                                     <Binding ElementName="Model" Path="SelectedFile" />
@@ -151,12 +177,18 @@
                                 </MultiBinding>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
-                        <GridViewColumn Header="Red" Width="auto"
-                                        DisplayMemberBinding="{Binding R}"/>
-                        <GridViewColumn Header="Green" Width="auto"
-                                        DisplayMemberBinding="{Binding G}"/>
-                        <GridViewColumn Header="Blue" Width="auto"
-                                        DisplayMemberBinding="{Binding B}"/>
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding R}"
+                            Header="Red" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding G}"
+                            Header="Green" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding B}"
+                            Header="Blue" />
                     </GridView>
                 </ListView.View>
                 <ListView.ItemContainerStyle>
@@ -169,14 +201,17 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
-            <ToggleButton Content="&lt;"
-                          IsChecked="{Binding ElementName=ColorListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}"
-                          Width="10" Height="100"/>
+            <ToggleButton
+                Width="10"
+                Height="100"
+                Content="&lt;"
+                IsChecked="{Binding ElementName=ColorListView, Path=Visibility, Converter={StaticResource VisibleCollapse}}" />
         </DockPanel>
-        <TabControl SelectedIndex="0"
-                    DockPanel.Dock="Right"
-                    ItemsSource="{Binding .}"
-                    SelectedItem="{Binding SelectedFile}">
+        <TabControl
+            DockPanel.Dock="Right"
+            ItemsSource="{Binding .}"
+            SelectedIndex="0"
+            SelectedItem="{Binding SelectedFile}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <controls:MyTKFrame />
@@ -184,20 +219,27 @@
             </TabControl.ContentTemplate>
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
+                        <Button
+                            Margin="2"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{Binding ElementName=Model, Path=RemoveFileCommand}"
+                            Content="x"
+                            DockPanel.Dock="Right" />
+                        <Button
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{Binding ElementName=Model, Path=RefreshFileCommand}"
+                            Content="R" />
                         <TextBlock VerticalAlignment="Center">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} {0}">
-                                    <Binding Path="Location"/>
-                                </MultiBinding >
+                                    <Binding Path="Location" />
+                                </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
-                        <Button Content="x"
-                                BorderThickness="0"
-                                Background="Transparent"
-                                Margin="2"
-                                Command="{Binding ElementName=Model, Path=RemoveFileCommand}"/>
-                    </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
         </TabControl>
