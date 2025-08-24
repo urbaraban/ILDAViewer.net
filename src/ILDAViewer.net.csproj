@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <StartupObject>ILDAViewer.net.App</StartupObject>
@@ -17,12 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="OpenTK" Version="4.7.7" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="OpenTK" Version="4.9.4" />
+    <PackageReference Include="OpenTK.GLWpfControl" Version="4.3.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GLWpfControl\src\GLWpfControl\GLWpfControl.csproj" />
     <ProjectReference Include="..\..\ILDA.net\src\ILDA.net\ILDA.net.csproj" />
   </ItemGroup>
 
