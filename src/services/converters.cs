@@ -1,12 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-using System.Windows;
-using ILDA.net;
+﻿using ILDA.net;
 using ILDAViewer.net.models;
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
-using System.Collections;
-using System.Linq;
 
 namespace ILDAViewer.net.services
 {
