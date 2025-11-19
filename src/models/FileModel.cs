@@ -20,9 +20,9 @@ namespace ILDAViewer.net.models
         {
             get
             {
-                if (this.File.Count > 0)
+                if (this.File.Frames.Count > 0)
                 {
-                    return this.File[SelectedIndex];
+                    return this.File.Frames[SelectedIndex];
                 }
                 return null;
             }
@@ -94,8 +94,8 @@ namespace ILDAViewer.net.models
         {
             get => File.Location;
         }
-        public int Count => ((ICollection<IldaFrame>)File).Count;
-        public bool IsReadOnly => ((ICollection<IldaFrame>)File).IsReadOnly;
+        public int Count => File.Frames.Count;
+        public bool IsReadOnly => ((ICollection<IldaFrame>)File.Frames).IsReadOnly;
 
         private int displayList { get; set; }
 
@@ -160,10 +160,10 @@ namespace ILDAViewer.net.models
             GL.Begin(PrimitiveType.Lines);
             GL.LineWidth(Properties.Settings.Default.line_width);
 
-            for (int i = 1; i < frame.Count; i += 1)
+            for (int i = 1; i < frame.Points.Count; i += 1)
             {
-                IldaPoint p1 = frame[i - 1];
-                IldaPoint p2 = frame[i];
+                IldaPoint p1 = frame.Points[i - 1];
+                IldaPoint p2 = frame.Points[i];
                 if ((p1.IsBlanked != true && p2.IsBlanked != true)
                     || Properties.Settings.Default.show_blanked == true)
                 {
@@ -181,10 +181,10 @@ namespace ILDAViewer.net.models
                 GL.PointSize(Properties.Settings.Default.point_size);
                 GL.Begin(PrimitiveType.Points);
 
-                for (int i = 1; i < frame.Count; i += 1)
+                for (int i = 1; i < frame.Points.Count; i += 1)
                 {
-                    if (frame[i].IsBlanked != true || Properties.Settings.Default.show_blanked == true)
-                        IldPointSet(frame[i], frame.IldaVersion);
+                    if (frame.Points[i].IsBlanked != true || Properties.Settings.Default.show_blanked == true)
+                        IldPointSet(frame.Points[i], frame.IldaVersion);
                 }
                 GL.End();
             }
@@ -233,10 +233,10 @@ namespace ILDAViewer.net.models
 
         public Vector3[] GetVectors(IldaFrame frame)
         {
-            Vector3[] ret = new Vector3[frame.Count];
-            for (int i = 0; i < frame.Count; i += 1)
+            Vector3[] ret = new Vector3[frame.Points.Count];
+            for (int i = 0; i < frame.Points.Count; i += 1)
             {
-                ret[i] = new Vector3(frame[i].X, frame[i].Y, frame[i].Z);
+                ret[i] = new Vector3(frame.Points[i].X, frame.Points[i].Y, frame.Points[i].Z);
             }
             return ret;
         }
@@ -255,9 +255,9 @@ namespace ILDAViewer.net.models
 
             if (ildaPoint.IsBlanked == false && this.File.Palette != null)
             {
-                if (v < 2 && ildaPoint.PalIndex < this.File.Palette.Count)
+                if (v < 2 && ildaPoint.PalIndex < this.File.Palette.Colors.Count)
                 {
-                    ildaColor = this.File.Palette[ildaPoint.PalIndex];
+                    ildaColor = this.File.Palette.Colors[ildaPoint.PalIndex];
                 }
                 else if (ildaPoint.Color != null)
                 {
@@ -278,9 +278,9 @@ namespace ILDAViewer.net.models
 
         internal IldaColor GetPalette(byte pindex)
         {
-            if (this.File != null && pindex < this.File.Palette.Count)
+            if (this.File != null && pindex < this.File.Palette.Colors.Count)
             {
-                return this.File.Palette[pindex];
+                return this.File.Palette.Colors[pindex];
             }
             return new IldaColor(255,255,255);
         }

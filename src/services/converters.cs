@@ -167,7 +167,7 @@ namespace ILDAViewer.net.services
             if (values[0] is FileModel file && values[1] is IldaColor obj)
             {
                 int index = -1;
-                index = file.Palette.IndexOf(obj);
+                index = file.Palette.Colors.IndexOf(obj);
                 return index.ToString();
             }
 

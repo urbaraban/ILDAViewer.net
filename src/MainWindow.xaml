@@ -107,7 +107,7 @@
             <ListView
                 x:Name="PointsListView"
                 DockPanel.Dock="Right"
-                ItemsSource="{Binding SelectedFrame}"
+                ItemsSource="{Binding SelectedFrame.Points}"
                 SelectedItem="{Binding SelectedPoint}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
@@ -166,7 +166,7 @@
             <ListView
                 x:Name="ColorListView"
                 DockPanel.Dock="Left"
-                ItemsSource="{Binding Palette}">
+                ItemsSource="{Binding Palette.Colors}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="auto" Header="Index">
